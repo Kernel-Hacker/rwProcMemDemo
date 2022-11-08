@@ -50,8 +50,8 @@ int read_phy_addr(int pid, uint64_t addr, size_t len, char *buf)
         mmap_read_unlock(mm);
     }
 
+    rcu_read_lock();
     int copied = 0;
-
     while (len > 0)
     {
         struct page *page = *process_pages++;
@@ -65,6 +65,7 @@ int read_phy_addr(int pid, uint64_t addr, size_t len, char *buf)
         copied += copy;
         offset = 0;
     }
+    rcu_read_unlock();
 
     return 0;
 }
@@ -102,8 +103,8 @@ int write_phy_addr(int pid, uint64_t addr, size_t len, char *buf)
         mmap_read_unlock(mm);
     }
 
+    rcu_read_lock();
     int copied = 0;
-
     while (len > 0)
     {
         struct page *page = *process_pages++;
@@ -117,6 +118,7 @@ int write_phy_addr(int pid, uint64_t addr, size_t len, char *buf)
         copied += copy;
         offset = 0;
     }
+    rcu_read_unlock();
 
     return 0;
 }
