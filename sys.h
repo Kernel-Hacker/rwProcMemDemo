@@ -36,6 +36,7 @@ MY_STATIC struct class *g_Class_devp; //创建的设备类
 MY_STATIC int rwProcMem_open(struct inode *inode, struct file *filp);
 MY_STATIC int rwProcMem_release(struct inode *inode, struct file *filp);
 MY_STATIC ssize_t rwProcMem_read(struct file* filp, char __user* buf, size_t size, loff_t* ppos);
+MY_STATIC ssize_t rwProcMem_write(struct file* filp, const char __user* buf, size_t size, loff_t *ppos);
 
 MY_STATIC const struct file_operations rwProcMem_fops =
 {
@@ -43,6 +44,7 @@ MY_STATIC const struct file_operations rwProcMem_fops =
   .open = rwProcMem_open, //打开设备函数
   .release = rwProcMem_release, //释放设备函数
   .read = rwProcMem_read, //读设备函数
+  .write = rwProcMem_write, //读设备函数
 };
 
 

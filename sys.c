@@ -23,11 +23,37 @@ MY_STATIC ssize_t rwProcMem_read(struct file *filp, char __user *userbuf, size_t
 
 		printk(KERN_EMERG "proc_virt_addr:0x%x,size:%ld\n", proc_virt_addr, sizeof(proc_virt_addr));
 
-		get_phy_addr(proc_pid, (uint64_t)proc_virt_addr, size, buf);
+		read_phy_addr(proc_pid, (uint64_t)proc_virt_addr, size, buf);
 
 		printk(KERN_EMERG "rwProcMemDemo_read:%x\n", *(uint64_t*)buf);
 	}
 	copy_to_user(userbuf, buf, size);
+
+	return 0;
+}
+
+MY_STATIC ssize_t rwProcMem_write(struct file* filp, const char __user* userbuf, size_t size, loff_t *ppos)
+{
+
+	//struct rwProcMemDev* devp = filp->private_data; //获得设备结构体指针
+
+	char data[16] = {0};
+
+	char buf[64] = {0x11,0x11,0x11,0x11};
+
+	if (copy_from_user(data, userbuf, 16) == 0)
+	{
+		int proc_pid = *(size_t *)&data;
+		uint64_t proc_virt_addr = *(uint64_t *)&data[8];
+
+		printk(KERN_EMERG "READ proc_pid:0x%d,size:%ld\n", proc_pid, sizeof(proc_pid));
+
+		printk(KERN_EMERG "proc_virt_addr:0x%x,size:%ld\n", proc_virt_addr, sizeof(proc_virt_addr));
+
+		write_phy_addr(proc_pid, (uint64_t)proc_virt_addr, size, buf);
+
+		printk(KERN_EMERG "rwProcMemDemo_write:%x\n", *(uint64_t*)buf);
+	}
 
 	return 0;
 }
